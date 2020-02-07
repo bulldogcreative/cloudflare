@@ -1,6 +1,6 @@
 <?php
 
-class Cloudflare_ext
+class Cloudflaree_ext
 {
     public $name = 'Cloudflaree';
     public $version = '1.0.0-rc1';
