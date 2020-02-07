@@ -10,6 +10,8 @@ class Cloudflaree_ext
 
     public $settings = [];
 
+    protected $debug = false;
+
     public function __construct($settings = '')
     {
         $this->settings = $settings;
@@ -73,7 +75,11 @@ class Cloudflaree_ext
             'Authorization: Bearer ' . $this->settings['token'],
         ]);
 
-        curl_exec($handler);
+        $response = curl_exec($handler);
         curl_close($handler);
+
+        if($this->debug) {
+            file_put_contents("log.txt", $response . "\n", FILE_APPEND);
+        }
     }
 }
