@@ -2,13 +2,15 @@
 
 class Cloudflare_ext
 {
-    public $name = 'Cloudflaree';
-    public $version = '1.0.0-rc1';
-    public $description = 'Purge Cloudflare cache';
+    public $name           = 'Cloudflare';
+    public $version        = '1.0.0-rc2';
+    public $description    = 'Purge Cloudflare cache';
     public $settings_exist = 'y';
-    public $docs_url = '';
+    public $docs_url       = '';
 
     public $settings = [];
+
+    protected $debug = false;
 
     public function __construct($settings = '')
     {
@@ -19,29 +21,29 @@ class Cloudflare_ext
     {
         $this->settings = [
             'zone_id' => '',
-            'token' => '',
+            'token'   => '',
         ];
 
         // https://docs.expressionengine.com/latest/development/extension-hooks/model/channel-entry.html
         ee()->db->insert('extensions', [
-            'class' => __CLASS__,
-            'method' => 'purge',
-            'hook' => 'after_channel_entry_save',
+            'class'    => __CLASS__,
+            'method'   => 'purge',
+            'hook'     => 'after_channel_entry_save',
             'settings' => serialize($this->settings),
             'priority' => 10,
-            'version' => $this->version,
-            'enabled' => 'y',
+            'version'  => $this->version,
+            'enabled'  => 'y',
         ]);
 
         // https://docs.expressionengine.com/latest/development/extension-hooks/model/template.html
         ee()->db->insert('extensions', [
-            'class' => __CLASS__,
-            'method' => 'purge',
-            'hook' => 'after_template_save',
+            'class'    => __CLASS__,
+            'method'   => 'purge',
+            'hook'     => 'after_template_save',
             'settings' => serialize($this->settings),
             'priority' => 10,
-            'version' => $this->version,
-            'enabled' => 'y',
+            'version'  => $this->version,
+            'enabled'  => 'y',
         ]);
     }
 
@@ -56,7 +58,7 @@ class Cloudflare_ext
         $settings = [];
 
         $settings['zone_id'] = ['i', '', ''];
-        $settings['token'] = ['i', '', ''];
+        $settings['token']   = ['i', '', ''];
 
         return $settings;
     }
@@ -70,10 +72,14 @@ class Cloudflare_ext
         curl_setopt($handler, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($handler, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            'Authorization: Bearer ' . $this->settings['token'],
+            'Authorization: Bearer '.$this->settings['token'],
         ]);
 
-        curl_exec($handler);
+        $response = curl_exec($handler);
         curl_close($handler);
+
+        if ($this->debug) {
+            file_put_contents('log.txt', $response."\n", FILE_APPEND);
+        }
     }
 }

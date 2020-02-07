@@ -1,4 +1,4 @@
-# Cloudflaree
+# Cloudflare
 
 ExpressionEngine extension for [Cloudflare](https://www.cloudflare.com/).
 
@@ -30,7 +30,7 @@ Zone ID for your domain.
 
 #### Screenshot of creating a token
 
-![screenshot of Cloudflare page to create a new token](images/cloudflaree.png)
+![screenshot of Cloudflare page to create a new token](images/cloudflare.png)
 
 ### Finding your Zone ID
 
